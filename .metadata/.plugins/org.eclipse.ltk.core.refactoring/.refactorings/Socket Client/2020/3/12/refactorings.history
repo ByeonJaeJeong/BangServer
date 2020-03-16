@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;application.Talbe&apos; to &apos;Table&apos;&#x0D;&#x0A;- Original project: &apos;Socket Client&apos;&#x0D;&#x0A;- Original element: &apos;application.Talbe&apos;&#x0D;&#x0A;- Renamed element: &apos;application.Table&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;Talbe&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;application{Talbe.java[Talbe" matchStrategy="1" name="Table" qualified="false" references="true" similarDeclarations="false" stamp="1584365912786" textual="false" version="1.0"/>
+</session>

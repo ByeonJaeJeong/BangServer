@@ -8,5 +8,7 @@ public class Room {
 	String owner;//방장
 	Vector<Service> userV;//같은방에 접속한 클라이언트 정보 저장
 	
-	
+	public Room(){
+		userV= new Vector<>();
+	}
 }

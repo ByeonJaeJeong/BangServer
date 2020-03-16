@@ -14,7 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.paint.Stop;
 
 public class ServerController implements Initializable{
-
+	Server server;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -35,11 +35,10 @@ public class ServerController implements Initializable{
 	}
 	
 	
-	ServerSocket serverSocket;
-	Socket socket;
+	
 	public void StartServer(){
 		try {
-			new Server();
+			server=new Server();
 		} catch (Exception e) {
 			System.out.println("서버 실행 실패!");
 		}
@@ -47,9 +46,10 @@ public class ServerController implements Initializable{
 
 	public void StopServer(){
 		try {
-			serverSocket.close();
+			server.StopServer();
 			System.out.println("서버소켓 종료!");
-		} catch (IOException e) {
+			
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("서버소켓 종료실패");
 		}

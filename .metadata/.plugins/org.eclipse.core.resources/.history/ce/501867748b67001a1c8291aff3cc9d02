@@ -1,0 +1,69 @@
+package application;
+
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TableView;
+
+public class ClientController implements Initializable{
+	Socket socket;
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		if(MyInfo.socketConnect){ //서버 연결
+			final String SERVER_IP="192.168.7.21";
+			final int SERVER_PORT=5000;
+			
+			socket=new Socket();
+			try{
+				socket.connect(new InetSocketAddress(SERVER_IP,SERVER_PORT));
+				System.out.println("서버 연결 성공!");
+				MyInfo.setConnect(true);
+				MyInfo.setSocket(socket);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	@FXML
+	TableView<
+	
+	public void addTable(String[] Tables){
+		Tables;
+	}
+	
+}
+
+
+public class Table{
+	private final SimpleStringProperty number;
+	private final SimpleStringProperty title;
+	private final SimpleStringProperty state;
+	
+	private  Table(String number, String title, String state) {
+		this.number=new SimpleStringProperty(number);
+		this.title=new SimpleStringProperty(title);
+		this.state=new SimpleStringProperty(state);
+		
+		
+	}
+
+	public SimpleStringProperty getNumber() {
+		return number;
+	}
+
+	public SimpleStringProperty getTitle() {
+		return title;
+	}
+
+	public SimpleStringProperty getState() {
+		return state;
+	}
+	
+}

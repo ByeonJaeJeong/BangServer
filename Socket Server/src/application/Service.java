@@ -201,12 +201,12 @@ public class Service extends Thread{
 	public void messageWait(String msg){//대기실 사용자
 		for(int i=0; i<waitV.size();i++){//벡터 인덱스
 			Service service=waitV.get(i);//각각의 클라이언트 얻어오기
-			
+			System.out.println("정상작동");
 			try{
 				service.messageTo(msg);
 			}catch (Exception e) {
 				//에러발생->> 클라이언트 접속 끊음!
-				myRoom.userV.remove(i--);//접속 끊긴 클라이언트 를 벡터에서 삭제
+				waitV.remove(i--);//접속 끊긴 클라이언트 를 벡터에서 삭제
 				System.out.println("클라이언트 접속 끊음!-wait");
 			}
 			
@@ -228,6 +228,7 @@ public class Service extends Thread{
 	public void messageTo(String msg) throws IOException{
 		//특정 클라이언트에게 메시지 전달(실제 서버->>클라이언트 메시지 전달)
 		out.write((msg+"\n").getBytes());
+		System.out.println("메세지 전송"+msg);
 	}
 	
 	
