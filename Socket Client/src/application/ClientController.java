@@ -58,8 +58,7 @@ public class ClientController implements Initializable{
 		title_input.setText("");
 		pass_input.setText("");
 		
-		Main main =new Main();
-		main.sendMsg(title_pass);
+		Main.sendMsg(title_pass);
 	}
 	
 	

@@ -20,7 +20,7 @@ public class Main extends Application {
 	
 	//소켓 입출력 객체
 	BufferedReader in;
-	OutputStream out;
+	static OutputStream out;
 	
 	String selectRoom;
 
@@ -63,7 +63,10 @@ public class Main extends Application {
 		}
 	}//connect
 	
-	public void sendMsg(String msg){
+	
+
+	
+	public static void sendMsg(String msg){
 		//서버에 메시지 보내기
 		try{
 			System.out.println(msg);
