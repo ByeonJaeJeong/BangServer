@@ -132,6 +132,9 @@ public class Service extends Thread{
 						messageWait("160|" + getRoomInfo());// 대기실 방정보 출력
 
 						break;
+					case "500"://대기실 방정보 출력
+						messageWait("160|" + getRoomInfo());// 대기실 방정보 출력
+						break;
 					}// switch문;
 				}//if문 종료
 			}//while문

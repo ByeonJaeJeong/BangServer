@@ -6,13 +6,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import javafx.collections.ObservableList;
+
 public class Client extends Thread{
 
 	BufferedReader in;
 	static OutputStream out;
 	
 	Socket socket;
-	ClientController controller=new ClientController();
+	RoomManagerController controller=new RoomManagerController();
 	
 	
 	public Client(Socket socket) {
@@ -37,9 +39,15 @@ public class Client extends Thread{
 				if(msgs.length>1){
 					//개설된 방이 하나이상일때 실행
 					//개설된 방 없음-->msg="160|"이였을때 에러
+					controller.data.clear();
 					String[] roomNames=msgs[1].split(",");
 					System.out.println(roomNames);
-					controller.addTable(roomNames);
+					for(int i=0;i<roomNames.length;i++){
+					String roomInwon=roomNames[i].split("--")[1]+"/8";
+					String roomtitle=roomNames[i].split("--")[0];
+					RoomManagerController.data.add(new Table(roomInwon, roomtitle, "대기중"));
+					}
+					
 				}
 					break;
 				case "170"://대기실에서 대화방 인원정보

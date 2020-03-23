@@ -10,7 +10,10 @@ import java.net.UnknownHostException;
 import java.util.Vector;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.fxml.FXMLLoader;
@@ -23,10 +26,13 @@ public class Main extends Application {
 	static OutputStream out;
 	
 	String selectRoom;
-
+	static Stage primaryStage=null;
+	
+	
 	
 	@Override
 	public void start(Stage primaryStage) {
+		this.primaryStage=primaryStage;
 		try {
 			BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("BangRoomManager.fxml"));
 			Scene scene = new Scene(root,1024,700);
@@ -34,6 +40,18 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			primaryStage.setTitle("Bang! 대기실");
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				
+				@Override
+				public void handle(WindowEvent event) {
+					// TODO Auto-generated method stub
+					Platform.exit();
+					System.exit(0);
+					primaryStage.close();
+					
+				}
+			});
+		
 			
 			Socket socket= new Socket("localhost",5000);//나중에 IP로 변경
 			new Client(socket);
@@ -47,7 +65,24 @@ public class Main extends Application {
 		}
 	}
 	
-	
+	public  void GameRoom(Stage primaryStage,String title){
+		BorderPane root;
+		try {
+			Client.sendMsg("200|"+title);
+			root = (BorderPane)FXMLLoader.load(getClass().getResource("BangRoom.fxml"));
+			Scene scene= new Scene(root,1024,700);
+			
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			primaryStage.setTitle(title);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
 	
 	
 	public static void main(String[] args) {

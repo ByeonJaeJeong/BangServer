@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ClientController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RoomManagerController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -43,9 +43,9 @@
             <ScrollBar layoutX="810.0" orientation="VERTICAL" prefHeight="426.0" prefWidth="14.0" />
             <TableView fx:id="Roominfo" prefHeight="426.0" prefWidth="824.0">
               <columns>
-                <TableColumn fx:id="playerColumn" prefWidth="88.0" text="인원" />
-                <TableColumn fx:id="titleColumn" prefWidth="511.0" text="제목" />
-                  <TableColumn fx:id="infoColumn" prefWidth="224.0" text="상태" />
+                <TableColumn fx:id="inwonCol" prefWidth="88.0" text="인원" />
+                <TableColumn fx:id="titleCol" prefWidth="511.0" text="제목" />
+                  <TableColumn fx:id="stateCol" prefWidth="224.0" text="상태" />
               </columns>
               
             </TableView>
@@ -53,7 +53,7 @@
                <children>
                   <Button layoutX="730.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="94.0" text="방만들기" onAction="#addRoomBtn"/>
                   <Button layoutX="630.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="94.0" text="들어가기" />
-                  <Button layoutX="528.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="94.0" text="새로고침" />
+                  <Button fx:id="refreshBtn" layoutX="528.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="94.0" text="새로고침" />
                </children>
             </Pane>
             <BorderPane layoutX="235.0" layoutY="93.0" style="-fx-background-radius: 10px;">
