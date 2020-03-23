@@ -68,20 +68,18 @@ public class Main extends Application {
 	public  void GameRoom(Stage primaryStage,String title){
 		BorderPane root;
 		try {
-			Client.sendMsg("200|"+title);
+			
 			root = (BorderPane)FXMLLoader.load(getClass().getResource("BangRoom.fxml"));
 			Scene scene= new Scene(root,1024,700);
 			
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			primaryStage.setTitle(title);
+			primaryStage.setTitle("Bang!-->"+title);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 	

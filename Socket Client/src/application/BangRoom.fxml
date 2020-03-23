@@ -24,7 +24,7 @@
    <right>
       <Pane prefHeight="538.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onMouseClicked="#exitRoom" prefHeight="23.0" prefWidth="199.0" text="←뒤로가기">
+            <Button mnemonicParsing="false" onAction="#exitRoom" prefHeight="23.0" prefWidth="199.0" text="←뒤로가기">
                <font>
                   <Font size="18.0" />
                </font>

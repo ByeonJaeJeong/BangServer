@@ -9,9 +9,11 @@ import java.net.URL;
 
 import java.util.ResourceBundle;
 
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableRowSorter;
 
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -34,10 +36,9 @@ public class RoomManagerController implements Initializable{
 	Socket socket;
 	
 	@FXML
-	TableView<Table> Roominfo= new TableView<Table>();
+	TableView<Table>  Roominfo= new TableView<Table>();
 	
-	public static  ObservableList<Table> data=FXCollections.observableArrayList(
-			new Table("안녕", "안녕", "안녕"));
+	public static  ObservableList<Table> data=FXCollections.observableArrayList();
 			
 	@FXML
 	private TableColumn<Table,String> inwonCol;
@@ -53,7 +54,7 @@ public class RoomManagerController implements Initializable{
 
 		
 	
-			
+		
 	
 	
 
@@ -67,14 +68,12 @@ public class RoomManagerController implements Initializable{
 		inwonCol.setCellValueFactory(new PropertyValueFactory<Table,String>("inwon"));
 		titleCol.setCellValueFactory(new PropertyValueFactory<Table,String>("title"));
 		stateCol.setCellValueFactory(new PropertyValueFactory<Table,String>("state"));
-
 		Roominfo.getItems().setAll(this.data);
+		  refreshBtn.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
 		
-		refreshBtn.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-			
 			@Override
 			public void handle(MouseEvent event) {
-				
+				System.out.println("클릭핸들실행");
 				Client.sendMsg("500|");
 				
 				System.out.println("initdata크기="+data.size());
@@ -83,6 +82,9 @@ public class RoomManagerController implements Initializable{
 				
 			}
 		});
+		
+		
+		
 		
 		//Select 된 이전 값을 저장하기 위한 변수
 		
@@ -94,6 +96,7 @@ public class RoomManagerController implements Initializable{
                   Stage priamryStage;
 					Main main=new Main();
 					main.GameRoom(Main.primaryStage, title);
+					Client.sendMsg("200|"+title);
                     oldValue = null;
                   
                 } else {
@@ -103,13 +106,9 @@ public class RoomManagerController implements Initializable{
             }
         });
 	
+		
 
-	
-	
-	
-
-
-	
+		
 	
 	
 			
@@ -119,14 +118,20 @@ public class RoomManagerController implements Initializable{
 		
 	}//initialize 끝
 	
+	public void  refreshAction(){
+		Roominfo.getItems().addAll(data);
+	}
+	
 	
 	@FXML Pane addRoomPanel;
+	@FXML TextField title_input;
+	@FXML TextField pass_input;
 	@FXML
 	public void addRoomBtn(){
 		addRoomPanel.setVisible(true);
+		
 	}
-	@FXML TextField title_input;
-	@FXML TextField pass_input;
+	
 	@FXML
 	public void addRoomcancel(){
 		title_input.setText("");
@@ -138,6 +143,8 @@ public class RoomManagerController implements Initializable{
 		String title_pass="160|"+title_input.getText()+"|"+pass_input.getText();
 		
 		addRoomPanel.setVisible(false);
+		Main main=new Main();
+		main.GameRoom(Main.primaryStage, title_input.getText());
 		title_input.setText("");
 		pass_input.setText("");
 		
@@ -161,7 +168,7 @@ public class RoomManagerController implements Initializable{
 			System.out.println("name="+title+"Inwon="+inwon);
 			
 			data.addAll(new Table(inwon, title, state));
-			
+			Roominfo.getItems().addAll(data);
 		
 		}
 	

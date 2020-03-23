@@ -9,8 +9,8 @@ import java.util.Vector;
 
 public class Service extends Thread{
 	
-	Room myRoom;//클라이언트가 입장한 대화방
 	
+	Room myRoom;//클라이언트가 입장한 대화방
 	//소켓 관련 입출력 서비스
 	BufferedReader in;
 	OutputStream out;
@@ -101,7 +101,8 @@ public class Service extends Thread{
 						for (int i = 0; i < roomV.size(); i++) {// 방 이름 찾기
 							Room room = roomV.get(i);
 							if (room.title.equals(msgs[1])) {// 일치하는 방 찾음
-								myRoom = room;
+								this.myRoom = room;
+								
 								myRoom.count++;
 								break;
 							} // if문 종료
@@ -120,6 +121,7 @@ public class Service extends Thread{
 						messageRoom("300|[" + nickName + "]▶" + msgs[1]);
 						break;
 					case "400":// 대화방 퇴장
+						myRoom=this.myRoom;
 						myRoom.count--;
 
 						messageRoom("400|" + nickName);
@@ -130,7 +132,7 @@ public class Service extends Thread{
 						messageRoom("175|" + getRoomInwon());// 방인원 다시 출력
 
 						messageWait("160|" + getRoomInfo());// 대기실 방정보 출력
-
+						System.out.println("나가기성공");
 						break;
 					case "500"://대기실 방정보 출력
 						messageWait("160|" + getRoomInfo());// 대기실 방정보 출력

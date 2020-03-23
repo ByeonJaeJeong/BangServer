@@ -16,10 +16,10 @@ public class Client extends Thread{
 	Socket socket;
 	RoomManagerController controller=new RoomManagerController();
 	
+	static Room myRoom;
 	
 	public Client(Socket socket) {
 		connect();
-		
 		start();
 	}
 	
@@ -46,8 +46,11 @@ public class Client extends Thread{
 					String roomInwon=roomNames[i].split("--")[1]+"/8";
 					String roomtitle=roomNames[i].split("--")[0];
 					RoomManagerController.data.add(new Table(roomInwon, roomtitle, "대기중"));
-					}
 					
+					
+					
+					}
+					//RoomManagerController.Roominfo.getItems().addAll(RoomManagerController.data);
 				}
 					break;
 				case "170"://대기실에서 대화방 인원정보

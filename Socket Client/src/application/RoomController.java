@@ -3,6 +3,7 @@ package application;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
@@ -16,8 +17,10 @@ public class RoomController implements Initializable{
 		
 	}
 	
-	public void exitRoom(){
-		
+	public void exitRoom(ActionEvent event){
+		Main main=new Main();
+		main.start(main.primaryStage);
+		Client.sendMsg("400|exit");
 	}
 
 }
