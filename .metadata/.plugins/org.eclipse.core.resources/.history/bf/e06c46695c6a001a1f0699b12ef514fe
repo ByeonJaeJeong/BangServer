@@ -1,0 +1,235 @@
+package application;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.util.Vector;
+
+public class Service extends Thread{
+	
+	Room myRoom;//클라이언트가 입장한 대화방
+	
+	//소켓 관련 입출력 서비스
+	BufferedReader in;
+	OutputStream out;
+	
+	Vector<Service> allV;//모든 사용자
+	Vector<Service> waitV;//대기실 사용자
+	Vector<Room> roomV;//개설댄 대화방 사용자
+	
+	Socket socket;
+	
+	String nickName;
+	
+	public Service(Socket socket, Server server){
+			allV=server.allV;
+			waitV=server.watiV;
+			roomV=server.roomV;
+			
+			this.socket=socket;
+	
+			try{
+				in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				out= socket.getOutputStream();
+				
+				start();//스레드 시작
+				
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+	}//생성자
+	@Override
+	public void run(){
+		try{
+			while(true){
+				String msg= in.readLine();//클라이언트의 모든 메세지를 받기
+				
+				if(msg==null) return ;
+				if(msg.trim().length()>0){
+					System.out.println("from Client:"+msg+":"+socket.getInetAddress().getHostAddress());
+				
+					String msgs[] =msg.split("\\|");
+					String protocol=msgs[0]; //대상을 구분하기 위한 내용
+					/*
+					100:대기실 접속
+					150:대화명 입력
+					160:방 정보 
+					180:
+					200: 
+					 */
+					switch (protocol) {
+					case "100":// 대기실 접속
+						allV.add(this);// 전체사용자에 등록
+						waitV.add(this);// 대기실 등록
+						break;
+					case "150":// 대화명 입력
+						nickName = msgs[1];
+
+						// 최초 대화명 입력했을때 대기실의 정보를 출력
+
+						messageWait("160|" + getRoomInfo());
+						messageWait("180|" + getWaitInwon());
+						break;
+					case "160":// 방만들기(대화방 입장)
+						myRoom = new Room();
+						myRoom.title = msgs[1];
+						myRoom.count = 1;
+						myRoom.owner = nickName;
+
+						roomV.add(myRoom);
+						// 대기실 -->대화방 이동!!
+						waitV.remove(this);
+						myRoom.userV.add(this);
+
+						messageRoom("200|" + nickName);// 방인원에 입장을 출력
+						// 대기실 사용자들에게 방정보를 출력
+						// 예)대화방명:ㅁㅁㅁ
+						// --->roomInfo(JList): ㅁㅁㅁ--1
+
+						messageWait("160|" + getRoomInfo());
+						messageWait("180|" + getWaitInwon());
+						break;
+					case "170":// 대기실에서 대화방 인원정보
+						messageTo("170|" + getRoomInwon(msgs[1]));
+						break;
+					case "175":// 대화방에서 대화방 인원정보
+						messageRoom("175|" + getRoomInwon());
+						break;
+					case "200":// 방 들어가기(대화방 입장)
+						for (int i = 0; i < roomV.size(); i++) {// 방 이름 찾기
+							Room room = roomV.get(i);
+							if (room.title.equals(msgs[1])) {// 일치하는 방 찾음
+								myRoom = room;
+								myRoom.count++;
+								break;
+							} // if문 종료
+						} // for문 종료
+						waitV.remove(this);
+						myRoom.userV.add(this);
+
+						messageRoom("200|" + nickName);// 방인원에게 참여했다고 알림
+						// 들어갈 방의 title 전달
+						messageTo("202|" + myRoom.title);
+
+						messageWait("160|" + getRoomInfo());
+						messageWait("180|" + getRoomInwon());
+						break;
+					case "300":// 메시지
+						messageRoom("300|[" + nickName + "]▶" + msgs[1]);
+						break;
+					case "400":// 대화방 퇴장
+						myRoom.count--;
+
+						messageRoom("400|" + nickName);
+
+						myRoom.userV.remove(this);
+						waitV.add(this);
+
+						messageRoom("175|" + getRoomInwon());// 방인원 다시 출력
+
+						messageWait("160|" + getRoomInfo());// 대기실 방정보 출력
+
+						break;
+					}// switch문;
+				}//if문 종료
+			}//while문
+		}catch (Exception e) {
+			System.out.println("★");
+			e.printStackTrace();
+		}
+	}//run
+	
+	public String getRoomInfo(){
+		String str="";
+		for(int i=0;i<roomV.size();i++){
+			Room room=roomV.get(i);
+			str+=room.title+"--"+room.count;
+			if(i<roomV.size()-1)
+				str+=",";
+		}
+		return str;
+	}
+	public int getWaitInwon(){
+		int Inwon=0;
+		Inwon=waitV.size();
+		
+		return Inwon;
+	}
+	public String getRoomInwon(String title){//방제목 클릭시 방의 인원정보
+		String str="";
+		for(int i=0;i<roomV.size();i++){
+			Room room=roomV.get(i);
+			if(room.title.equals(title)){
+				for(int j=0;j<room.userV.size();j++){
+					Service ser= room.userV.get(j);
+					str+=ser.nickName;
+					if(j<room.userV.size()-1)
+						str+=",";
+				}
+				break;
+			}
+		}
+		return str;
+	}
+	public String getRoomInwon(){//같은방의 인원 정보
+		String str="";
+		for(int i=0;i<myRoom.userV.size();i++){
+			Service ser=myRoom.userV.get(i);
+				str+= ser.nickName;
+				if(i<myRoom.userV.size()-1)
+					str+=",";
+			}
+		return str;
+	}//getRoomInwon 자기방 정보 
+	
+	public void messageAll(String msg){//전체 사용자
+		//접속된 모든 클라이언트(대기실+대화방)에게 메세지 전달
+		for(int i=0; i<allV.size();i++){
+			Service service=allV.get(i);//각각의 클라이언트 얻어오기
+			try{
+				service.messageTo(msg);
+			}catch (Exception e) {
+				//에러발생->클라이언트 접속 끊음
+				allV.remove(i--);
+				System.out.println("클라이언트 접속 끊음-all");
+			}
+		}
+	}
+	
+	public void messageWait(String msg){//대기실 사용자
+		for(int i=0; i<waitV.size();i++){//벡터 인덱스
+			Service service=waitV.get(i);//각각의 클라이언트 얻어오기
+			System.out.println("정상작동");
+			try{
+				service.messageTo(msg);
+			}catch (Exception e) {
+				//에러발생->> 클라이언트 접속 끊음!
+				waitV.remove(i--);//접속 끊긴 클라이언트 를 벡터에서 삭제
+				System.out.println("클라이언트 접속 끊음!-wait");
+			}
+			
+		}
+	}//messageWait
+	
+	public void messageRoom(String msg){
+		for(int i=0; i<myRoom.userV.size();i++){
+			Service service =myRoom.userV.get(i);//각각의 클라이언트 얻어오기
+			try{
+				service.messageTo(msg);
+			}catch (Exception e) {
+				myRoom.userV.remove(i--);
+				System.out.println("클라이언트 접속 끊음!-room");
+			}
+		}
+	}
+	
+	public void messageTo(String msg) throws IOException{
+		//특정 클라이언트에게 메시지 전달(실제 서버->>클라이언트 메시지 전달)
+		out.write((msg+"\n").getBytes());
+		System.out.println("메세지 전송"+msg);
+	}
+	
+	
+}

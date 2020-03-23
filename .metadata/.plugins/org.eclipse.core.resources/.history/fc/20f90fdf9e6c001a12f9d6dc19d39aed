@@ -1,0 +1,32 @@
+package application;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.TableColumn;
+
+
+public class Table{
+		private final TableColumn<Table, String> number;
+		private final TableColumn<Table, String> title;
+		private final TableColumn<Table, String> state;
+		
+		public Table(TableColumn<Table, String> inWon, TableColumn<Table, String> firstColum, TableColumn<Table, String> state) {
+			this.number=inWon;
+			this.title=firstColum;
+			this.state=state;
+			
+			
+		}
+
+		public SimpleStringProperty getNumber() {
+			return number;
+		}
+
+		public SimpleStringProperty getTitle() {
+			return title;
+		}
+
+		public SimpleStringProperty getState() {
+			return state;
+		}
+		
+}

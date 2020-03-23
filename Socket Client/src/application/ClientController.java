@@ -58,27 +58,40 @@ public class ClientController implements Initializable{
 		title_input.setText("");
 		pass_input.setText("");
 		
-		Main.sendMsg(title_pass);
+		Client.sendMsg(title_pass);
 	}
 	
 	
 	@FXML
-	TableView<Table> Roominfo;
+	TableView<Table> Roominfo= new TableView<Table>();
 	
 	@FXML
-	private TableColumn Number;
+	private TableColumn<Table,String> Number;
 	@FXML
-	private TableColumn title;
+	private TableColumn<Table,String> title;
 	@FXML
-	private TableColumn state;
+	private TableColumn<Table,String> state;
 	
-	private final ObservableList<Table> data
-			=FXCollections.observableArrayList();
+	private final ObservableList<Table> data=
+			FXCollections.observableArrayList();
 		
 	
 	
 	public void addTable(String[] Tables){
-		Table tables=new Table(Tables[0], Tables[1], Tables[2]);
+		System.out.println("tables[0]="+Tables[0]);
+		for(int i=0;Tables.length>i;i++){
+			
+			//TableColumn<Table,String> firstColum= new TableColumn<Table,String>(Tables[i].split("--")[0]);
+			//TableColumn<Table,String> InWon2=new TableColumn<Table, String>(Tables[i].split("--")[1]+"/8");
+			String title=Tables[i].split("--")[0];
+			String Inwon=Tables[i].split("--")[1]+"/8";
+			System.out.println("name="+title+"Inwon="+Inwon);
+			Table Tablecolumn=new Table(Inwon, title, null);
+			data.add(Tablecolumn);
+			//Roominfo.getColumns().addAll(InWon2,firstColum,null);
+		System.out.println(data.toString());
+		}
+		Roominfo.setItems(data);
 	}
 	
 }
